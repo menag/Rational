@@ -1,0 +1,270 @@
+/**
+ * A package containing a tuple for rational numbers. This gives the
+ * possibility to make exact calculations with the loss of very small
+ * or big numbers. The possible numbers are of the form
+ * a / b with a and b being integers in the interval [-2^31, 2^31].
+ * Reducing the fractions usually yields that b > 0, hence we have tuples
+ * [-2^31, 2^31 - 1] x [1, 2^31 - 1] where x is the cartesian product.
+ * Therefore the smallest positive number is 1 / (2^31 - 1) = 4.66e-10. The
+ * greatest positive number is 2^31 / 1 = 2147483648. Keep in mind
+ * that reals can become much bigger and smaller then rationals.
+ */
+package Rational
+
+/** 
+ * Tuple for rational numbers. Using this constructor
+ * won't reduce the fraction, therefore you should use
+ * reduce(int p, int q).
+ *
+ * int p - the nominator
+ * int q - the denominator
+ *
+ * returns the unreduced fraction p/q
+ */
+public tuple rational(int p, int q)
+
+/**
+ * Reduces and returns the fraction created by p/q.
+ *
+ * int p - the nominator
+ * int q - the denominator
+ *
+ * returns the reduced fraction p/q
+ */
+public function reduce(int p, int q) returns rational
+	int gcd = gcd(p, q)
+	return rational(p div gcd, q div gcd)
+
+/**
+ * Creates a rational number from this integer.
+ *
+ * returns a rational representing this integer
+ */
+public function int.toRational() returns rational
+	return rational(this, 1)
+
+/**
+ * Creates a rational number from an integer.
+ * This uses the int.toRational() function internally.
+ *
+ * int i the integer to be converted
+ *
+ * returns a rational representing the given integer
+ */
+public function rational(int p) returns rational
+	return p.toRational()
+
+constant int pow15 = 32768
+constant int pow30 = 1073741824
+
+/**
+ * Creates a rational number from this real. This conversion
+ * might not be correct since reals can be much smaller or
+ * greater then integers.
+ *
+ * returns a rational representing this real
+ */
+public function real.toRational() returns rational
+	int sign = 1
+	real r = this
+	if (this < 0)
+		sign = -1
+		r = -this
+	if (r <= 1)
+		return reduce(sign * (r * pow30).toInt(),pow30)
+	if (this <= pow15)
+		return reduce(sign * (r * pow15).toInt(),pow15)
+	return reduce(sign * r.toInt(), 1)
+
+/**
+ * Creates a rational number from a real.
+ * This uses the real.toRational() function internally.
+ *
+ * real r the real to be converted
+ *
+ * returns a rational representing the given real
+ */
+public function rational(real r) returns rational
+	return r.toRational()
+
+/**
+ * Overloaded + operation
+ */
+public function rational.op_plus(rational r) returns rational
+	return reduce(this.p * r.q + this.q * r.p, this.q * r.q)
+
+/**
+ * Overloaded + operation for adding reals. This uses real.toRational().
+ */
+public function rational.op_plus(real r) returns rational
+	return this + r.toRational()
+
+/**
+ * Overloaded + operation for adding reals. This uses real.toRational().
+ */
+public function real.op_plus(rational r) returns rational
+	return this.toRational() + r
+
+/**
+ * Overloaded - operation
+ */
+public function rational.op_minus(rational r) returns rational
+	return reduce(this.p * r.q - this.q * r.p, this.q * r.q)
+
+/**
+ * Overloaded - operation for subtracting reals. This uses real.toRational()
+ * internally.
+ */
+public function rational.op_minus(real r) returns rational
+	return this - r.toRational()
+
+/**
+ * Overloaded - operation for subtracting rationals from reals. This uses 
+ * real.toRational() internally.
+ */
+public function real.op_minus(rational r) returns rational
+	return this.toRational() - r
+	
+/**
+ * Negates this rational number. The rational obtained by this usually
+ * has the property res + this = (0,1). An exception is when this = (-2^31,q),
+ * since 2^31-1 is the maximal integer.
+ *
+ * returns -this
+ */
+public function rational.negate() returns rational
+	return rational(-this.p, this.q)
+
+/**
+ * Overloaded * operation
+ */
+public function rational.op_mult(rational r) returns rational
+	int gcd1 = gcd(this.p, r.q)
+	int gcd2 = gcd(this.q, r.p)
+	return rational((this.p div gcd1) * (r.p div gcd2), 
+					(this.q div gcd2) * (r.q div gcd1))
+
+/**
+ * Overloaded * operation for multiplying reals. This uses real.toRational()
+ * internally.
+ */
+public function rational.op_mult(real r) returns rational
+	return this * r.toRational()
+
+/**
+ * Overloaded * operation for multiplying reals. This uses real.toRational()
+ * internally.
+ */	
+public function real.op_mult(rational r) returns rational
+	return this.toRational() * r
+
+/**
+ * Overloaded / operation
+ */
+public function rational.op_div(rational r) returns rational
+	int gcd1 = gcd(this.p, r.p)
+	int gcd2 = gcd(this.q, r.q)
+	return rational((this.p div gcd1) * (r.q div gcd2),
+					(this.q div gcd2) * (r.p div gcd1))
+
+/**
+ * Overloaded / operation for dividing by reals. This uses real.toRational()
+ * internally.
+ */	
+public function rational.op_div(real r) returns rational
+	return this / r.toRational()
+
+/**
+ * Overloaded / operation for dividing reals by rationals. This uses
+ * real.toRational() internally.
+ */		
+public function real.op_div(rational r) returns rational
+	return this.toRational() / r
+	
+/**
+ * Inverts this rational number. The rational obtained by this has
+ * the property res * this = (1,1).
+ *
+ * returns 1/this
+ */
+public function rational.invert() returns rational
+	return rational(this.q, this.p)
+
+/**
+ * Calculates the remainder of this rational.
+ * This is equivalent to this.p mod this.q.
+ *
+ * returns the remainder of this fraction
+ */
+public function rational.remainder() returns int
+	return this.p mod this.q
+
+/**
+ * Calculates the absolute value of this rational
+ *
+ * returns |this|
+ */
+public function rational.abs() returns rational
+	if this.p < 0
+		return rational(-this.p, this.q)
+	return this
+
+/**
+ * Compares this rational with the given rational. It
+ * calculates this.p * r.q - this.q * r.p and returns the
+ * result. Hence for this < r the result is negative, for
+ * this > r the result is positive and for this == r the result
+ * is 0.
+ *
+ * rational r - the rational to compared with
+ *
+ * returns an integer showing if this is greater, smaller or equal to r
+ */
+public function rational.compareTo(rational r) returns int
+	rational res = this / r
+	return res.p - res.q
+
+/**
+ * Creates the real representation of this rational.
+ *
+ * returns a real represented by this rational
+ */
+public function rational.toReal() returns real
+	return this.p / this.q
+
+/**
+ * Creates the integer representation of this rational.
+ * This is equivalent to this.p div this.q.
+ *
+ * returns an int represented by this rational
+ */
+public function rational.toInt() returns int
+	return this.p div this.q
+
+/**
+ * Creates a string representation of this rational in the
+ * form "p/q".
+ *
+ * returns a string representing this rational
+ */
+public function rational.toString() returns string
+	return this.p.toString() + "/" + this.q.toString()
+
+/**
+ * Calculates the greatest common divisor of p and q using
+ * the euclidean algorithm.
+ *
+ * int p - the first integer
+ * int q - the second integer
+ *
+ * returns the greatest common divisor of p and q
+ */	
+public function gcd(int p, int q) returns int
+	int h
+	int a = p
+	int b = q
+	while b != 0
+		h = a mod b
+		a = b
+		b = h
+	return a
