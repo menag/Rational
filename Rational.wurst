@@ -16,7 +16,7 @@ package Rational
  * won't reduce the fraction, therefore you should use
  * reduce(int p, int q).
  *
- * int p - the nominator
+ * int p - the numerator
  * int q - the denominator
  *
  * returns the unreduced fraction p/q
@@ -26,7 +26,7 @@ public tuple rational(int p, int q)
 /**
  * Reduces and returns the fraction created by p/q.
  *
- * int p - the nominator
+ * int p - the numerator
  * int q - the denominator
  *
  * returns the reduced fraction p/q
