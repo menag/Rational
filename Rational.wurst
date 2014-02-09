@@ -32,6 +32,8 @@ public tuple rational(int p, int q)
  * returns the reduced fraction p/q
  */
 public function reduce(int p, int q) returns rational
+	if q == 0
+		error("Denominator must be unequal to 0!")
 	int gcd = gcd(p, q)
 	return rational(p div gcd, q div gcd)
 
