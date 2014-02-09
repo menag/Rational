@@ -93,7 +93,9 @@ public function rational(real r) returns rational
  * Overloaded + operation
  */
 public function rational.op_plus(rational r) returns rational
-	return reduce(this.p * r.q + this.q * r.p, this.q * r.q)
+	int gcd = gcd(this.q, r.q)
+	return rational(this.p * (r.q div gcd) + r.p * (this.q div gcd),
+					this.q div gcd * r.q)
 
 /**
  * Overloaded + operation for adding reals. This uses real.toRational().
@@ -111,7 +113,9 @@ public function real.op_plus(rational r) returns rational
  * Overloaded - operation
  */
 public function rational.op_minus(rational r) returns rational
-	return reduce(this.p * r.q - this.q * r.p, this.q * r.q)
+	int gcd = gcd(this.q, r.q)
+	return rational(this.p * (r.q div gcd) - r.p * (this.q div gcd),
+					this.q div gcd * r.q)
 
 /**
  * Overloaded - operation for subtracting reals. This uses real.toRational()
@@ -163,7 +167,7 @@ public function real.op_mult(rational r) returns rational
 /**
  * Overloaded / operation
  */
-public function rational.op_div(rational r) returns rational
+public function rational.op_divReal(rational r) returns rational
 	int gcd1 = gcd(this.p, r.p)
 	int gcd2 = gcd(this.q, r.q)
 	return rational((this.p div gcd1) * (r.q div gcd2),
@@ -173,14 +177,14 @@ public function rational.op_div(rational r) returns rational
  * Overloaded / operation for dividing by reals. This uses real.toRational()
  * internally.
  */	
-public function rational.op_div(real r) returns rational
+public function rational.op_divReal(real r) returns rational
 	return this / r.toRational()
 
 /**
  * Overloaded / operation for dividing reals by rationals. This uses
  * real.toRational() internally.
  */		
-public function real.op_div(rational r) returns rational
+public function real.op_divReal(rational r) returns rational
 	return this.toRational() / r
 	
 /**
