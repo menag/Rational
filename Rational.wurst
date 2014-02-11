@@ -7,7 +7,7 @@
  * [-2^31, 2^31 - 1] x [1, 2^31 - 1] where x is the cartesian product.
  * Therefore the smallest positive number is 1 / (2^31 - 1) = 4.66e-10. The
  * greatest positive number is 2^31 / 1 = 2147483648. Keep in mind
- * that reals can become much bigger and smaller then rationals.
+ * that reals can become much bigger and smaller than rationals.
  */
 package Rational
 
