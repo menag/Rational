@@ -12,40 +12,68 @@ import Wurstunit
 	r2.p.assertEquals(823)
 	r2.q.assertEquals(4526)
 	
-@test function operatorTest()
+@test function plusTest()
+	rational r1 = reduce(11, 15)
+	rational r2 = reduce(77, 20)
+	
+	rational res = r1 + r2
+	res.p.assertEquals(55)
+	res.q.assertEquals(12)
+	
+@test function minusTest()
 	rational r1 = reduce(100, -10)
 	rational r2 = reduce(12345, 67890)
-	rational res
 	
-	res = r1 + r2
-	res.p.assertEquals(-44437)
-	res.q.assertEquals(4526)
-	
-	res = r1 - r2
+	rational res = r1 - r2
 	res.p.assertEquals(-46083)
 	res.q.assertEquals(4526)
 	
-	res = r1 * r2
+@test function multiplyTest()
+	rational r1 = reduce(100, -10)
+	rational r2 = reduce(12345, 67890)
+	
+	rational res = r1 * r2
 	res.p.assertEquals(-4115)
 	res.q.assertEquals(2263)
 	
-	res = r1 / r2
+@test function divideTest()
+	rational r1 = reduce(100, -10)
+	rational r2 = reduce(12345, 67890)
+	
+	rational res = r1 / r2
 	res.p.assertEquals(-45260)
 	res.q.assertEquals(823)
+
+@test function negateTest()
+	rational r1 = reduce(100, -10)
+	rational r2 = reduce(12345, 67890)
 	
-	res = r1 + r1.negate()
+	rational res = r1 + r1.negate()
 	res.p.assertEquals(0)
 	res.q.assertEquals(1)
+	
+	res = r2.negate()
+	res.p.assertEquals(-823)
+	res.q.assertEquals(4526)
+
+@test function invertTest()
+	rational r1 = reduce(100, -10)
+	rational r2 = reduce(12345, 67890)
+	
+	rational res = r1.invert()
+	res.p.assertEquals(-1)
+	res.q.assertEquals(10)
 	
 	res = r2 * r2.invert()
 	res.p.assertEquals(1)
 	res.q.assertEquals(1)
-
+	
 @test function someOtherStuff()
 	rational r1 = reduce(100, -10)
 	rational r2 = reduce(12345, 67890)
 	rational res1
 	int res2
+	boolean bool
 	
 	res1 = r1.abs()
 	res1.p.assertEquals(10)
@@ -56,3 +84,6 @@ import Wurstunit
 	
 	res2 = r1.compareTo(r2)
 	res2.assertEquals(-46083)
+	
+	bool = r1.equals(r2)
+	bool.assertFalse()

@@ -194,6 +194,8 @@ public function real.op_divReal(rational r) returns rational
  * returns 1/this
  */
 public function rational.invert() returns rational
+	if (this.p < 0)
+		return rational(-this.q, -this.p)
 	return rational(this.q, this.p)
 
 /**
@@ -229,6 +231,18 @@ public function rational.abs() returns rational
 public function rational.compareTo(rational r) returns int
 	rational res = this / r
 	return res.p - res.q
+
+/**
+ * Compares this rational with the given rational. It
+ * calculates this.p * r.q - this.q * r.p and returns true
+ * if and only if this == r.
+ *
+ * rational r - the rational to compared with
+ *
+ * returns true if this rational is the same as r; false otherwise 
+ */
+public function rational.equals(rational r) returns boolean
+	return this.compareTo(r) == 0
 
 /**
  * Creates the real representation of this rational.
