@@ -94,8 +94,8 @@ public function rational(real r) returns rational
  */
 public function rational.op_plus(rational r) returns rational
 	int gcd = gcd(this.q, r.q)
-	return rational(this.p * (r.q div gcd) + r.p * (this.q div gcd),
-					this.q div gcd * r.q)
+	return reduce(this.p * (r.q div gcd) + r.p * (this.q div gcd),
+                    this.q div gcd * r.q)
 
 /**
  * Overloaded + operation for adding reals. This uses real.toRational().
@@ -114,8 +114,8 @@ public function real.op_plus(rational r) returns rational
  */
 public function rational.op_minus(rational r) returns rational
 	int gcd = gcd(this.q, r.q)
-	return rational(this.p * (r.q div gcd) - r.p * (this.q div gcd),
-					this.q div gcd * r.q)
+	return reduce(this.p * (r.q div gcd) - r.p * (this.q div gcd),
+                    this.q div gcd * r.q)
 
 /**
  * Overloaded - operation for subtracting reals. This uses real.toRational()
